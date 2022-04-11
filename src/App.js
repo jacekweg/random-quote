@@ -1,10 +1,9 @@
-import './App.css';
-import MainBox from "./MainBox";
+import "./scss/App.scss";
+import Container from "./MainBox";
+import { store } from "./index";
 
 function App() {
-  return (
-      <MainBox />
-  );
+  return <Container store={store} />;
 }
 
 export default App;

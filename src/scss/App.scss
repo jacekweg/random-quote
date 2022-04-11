@@ -1,0 +1,15 @@
+$black: #101710;
+
+#main-window {
+  display: grid;
+  place-items: center;
+}
+#quote-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 15px;
+  border: $black solid 3px;
+}
