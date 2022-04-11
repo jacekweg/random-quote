@@ -4,11 +4,10 @@ import { connect } from "react-redux";
 import quotesJSON from "./quotes.json";
 import { NEWQUOTE } from "./index";
 
-const newQuote = (newQuote, newAuthor) => {
+const newQuote = (newQuote) => {
   return {
     type: NEWQUOTE,
-    quote: newQuote,
-    author: newAuthor,
+    quote: [...newQuote],
   };
 };
 
@@ -16,49 +15,57 @@ class MainBox extends React.Component {
   constructor(props) {
     super(props);
     this.getQuote = this.getQuote.bind(this);
+    this.getQuote();
   }
 
   getQuote() {
+    if (quotesJSON === undefined) {
+      return;
+    }
     let randomIndex = Math.floor(Math.random() * quotesJSON["quotes"].length);
     let quote = quotesJSON["quotes"][randomIndex]["quote"];
     let author = quotesJSON["quotes"][randomIndex]["author"];
-    // console.log("quote: " + quote + " author " + author);
-    this.props.getNewQuote(quote, author);
+    this.props.getNewQuote({ quote, author });
   }
 
   render() {
-    console.log("this.props.quote " + this.props.quotes);
-    console.log("this.props.author " + this.props.stringify);
+    let quote;
+    let author;
+    if (this.props.fullQuote !== undefined) {
+      quote = this.props.fullQuote.quote;
+      author = this.props.fullQuote.author;
+    } else {
+      quote = "Quote not found";
+      author = "Error";
+    }
     return (
-      <div id="main-window">
-        <div id="quote-box">
-          <p id="text">{this.props.quotes}</p>
-          <p id="author">- {this.props.author}</p>
-          <button id="new-quote" onClick={this.getQuote}>
-            New quote!
-          </button>
-          <a
-            id="tweet-quote"
-            href="https://twitter.com/intent/tweet"
-            rel="noreferrer"
-            target="_blank"
-          >
-            tweet it!
-          </a>
-        </div>
+      <div id="quote-box">
+        <p id="text">{quote}</p>
+        <p id="author">- {author}</p>
+        <button id="new-quote" onClick={this.getQuote}>
+          New quote!
+        </button>
+        <a
+          id="tweet-quote"
+          href="https://twitter.com/intent/tweet"
+          rel="noreferrer"
+          target="_blank"
+        >
+          tweet it!
+        </a>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  return { quotes: state.quotes };
+  return { fullQuote: state.quotes[0] };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getNewQuote: (message) => {
-      dispatch(newQuote(message));
+    getNewQuote: (...quote) => {
+      dispatch(newQuote(quote));
     },
   };
 };

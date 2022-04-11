@@ -14,8 +14,7 @@ export const NEWQUOTE = "NEWQUOTE";
 const quoteReducer = (state = [], action) => {
   switch (action.type) {
     case NEWQUOTE:
-      console.log("aaaaaaaaaaaaa");
-      return [action.quote, action.author];
+      return [...action.quote];
     default:
       return state;
   }
