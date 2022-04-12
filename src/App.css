@@ -8,6 +8,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  min-width: 25vw;
+  min-height: 10vh;
   text-align: center;
   font-size: 15px;
   border: #101710 solid 3px;

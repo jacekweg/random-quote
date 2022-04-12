@@ -9,6 +9,9 @@ $black: #101710;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+
+  min-width: 25vw;
+  min-height: 10vh;
   text-align: center;
   font-size: 15px;
   border: $black solid 3px;

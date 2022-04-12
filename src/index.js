@@ -2,29 +2,11 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 
 import { Provider } from "react-redux";
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import thunkMiddleware from "redux-thunk";
 
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-
-import { asyncDataReducer, RECEIVED_DATA, REQUESTING_DATA } from "./MainBox";
-
-// noinspection SpellCheckingInspection
-export const NEWQUOTE = "NEWQUOTE";
-
-export const quoteReducer = (state = {}, action) => {
-  switch (action.type) {
-    case NEWQUOTE:
-      return {
-        quote: action.quote,
-        author: action.author,
-      };
-    default:
-      return state;
-  }
-};
+import { REQUESTING_DATA, RECEIVED_DATA } from "./reducers/request";
+import store from "./store";
 
 async function getQuotesFromApi(dispatch) {
   dispatch({ type: REQUESTING_DATA });
@@ -40,14 +22,6 @@ async function getQuotesFromApi(dispatch) {
     dispatch({ type: RECEIVED_DATA, quotes: "" });
   }
 }
-
-const rootReducer = combineReducers({
-  quotes: quoteReducer,
-  request: asyncDataReducer,
-});
-
-const composedEnhancer = composeWithDevTools(applyMiddleware(thunkMiddleware));
-export const store = createStore(rootReducer, composedEnhancer);
 
 const container = document.getElementById("root");
 const root = createRoot(container);

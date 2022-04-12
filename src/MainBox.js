@@ -1,77 +1,58 @@
-import "./scss/App.scss";
+import "./App.scss";
 import React from "react";
 import { connect } from "react-redux";
-// import quotesJSON from "./quotes.json";
-import { NEWQUOTE } from "./index";
-
-export const REQUESTING_DATA = "REQUESTING_DATA";
-export const RECEIVED_DATA = "RECEIVED_DATA";
+import { NEWQUOTE } from "./reducers/quotes";
 
 const newQuote = (newQuote) => {
   return {
     type: NEWQUOTE,
-    quote: newQuote.quote,
+    text: newQuote.text,
     author: newQuote.author,
   };
-};
-
-const defaultState = {
-  fetching: false,
-  quotes: [],
-};
-
-export const asyncDataReducer = (state = defaultState, action) => {
-  switch (action.type) {
-    case REQUESTING_DATA:
-      return {
-        fetching: true,
-        quotesJson: [],
-      };
-    case RECEIVED_DATA:
-      return {
-        fetching: false,
-        quotesJson: action.quotes,
-      };
-    default:
-      return state;
-  }
 };
 
 class MainBox extends React.Component {
   constructor(props) {
     super(props);
     this.getQuote = this.getQuote.bind(this);
-    this.getQuote();
   }
 
   getQuote() {
     if (
-      this.props.quotesJSON[0] === undefined ||
-      this.props.quotesJSON.isEmpty
+      this.props.quotesJSON === undefined ||
+      this.props.quotesJSON.length === 0
     ) {
       return;
     }
 
     let randomIndex = Math.floor(Math.random() * this.props.quotesJSON.length);
-    let quote = this.props.quotesJSON[randomIndex]["quote"];
+    let text = this.props.quotesJSON[randomIndex]["quote"];
     let author = this.props.quotesJSON[randomIndex]["author"];
-    this.props.getNewQuote({ quote, author });
+
+    this.props.getNewQuote({ text, author });
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.quotesJSON !== prevProps.quotesJSON) {
+      this.getQuote();
+    }
   }
 
   render() {
-    let quote;
+    let text;
     let author;
     if (this.props.fullQuote !== undefined) {
-      quote = this.props.fullQuote.quote;
+      text = this.props.fullQuote.text;
       author = this.props.fullQuote.author;
     } else {
-      quote = "Quote not found";
+      text = "Quote not found";
       author = "Error";
     }
+
     return (
       <div id="quote-box">
-        <p id="text">{quote}</p>
-        <p id="author">- {author}</p>
+        <p id="text">{text ? text : <br />}</p>
+        <p id="author"> {author ? "- " + author : <br />}</p>
         <button id="new-quote" onClick={this.getQuote}>
           New quote!
         </button>
@@ -95,7 +76,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getNewQuote: (quote) => {
-      dispatch(newQuote({ quote: quote.quote, author: quote.author }));
+      dispatch(newQuote({ text: quote.text, author: quote.author }));
     },
   };
 };
