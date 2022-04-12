@@ -2,6 +2,8 @@ import "./App.scss";
 import React from "react";
 import { connect } from "react-redux";
 import { NEWQUOTE } from "./reducers/quotes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 
 const newQuote = (newQuote) => {
   return {
@@ -48,22 +50,20 @@ class MainBox extends React.Component {
       text = "Quote not found";
       author = "Error";
     }
-
+    let link = `https://twitter.com/intent/tweet?hashtags=RandomQuote&text="${text}"+-+${author}`;
     return (
       <div id="quote-box">
         <p id="text">{text ? text : <br />}</p>
         <p id="author"> {author ? "- " + author : <br />}</p>
-        <button id="new-quote" onClick={this.getQuote}>
-          New quote!
-        </button>
-        <a
-          id="tweet-quote"
-          href="https://twitter.com/intent/tweet"
-          rel="noreferrer"
-          target="_blank"
-        >
-          tweet it!
-        </a>
+
+        <div id="options">
+          <button id="new-quote" onClick={this.getQuote}>
+            New quote!
+          </button>
+          <a id="tweet-quote" href={link} rel="noreferrer" target="_blank">
+            <FontAwesomeIcon icon={faTwitter} />
+          </a>
+        </div>
       </div>
     );
   }
