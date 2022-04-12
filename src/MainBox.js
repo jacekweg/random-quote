@@ -1,14 +1,40 @@
 import "./scss/App.scss";
 import React from "react";
 import { connect } from "react-redux";
-import quotesJSON from "./quotes.json";
+// import quotesJSON from "./quotes.json";
 import { NEWQUOTE } from "./index";
+
+export const REQUESTING_DATA = "REQUESTING_DATA";
+export const RECEIVED_DATA = "RECEIVED_DATA";
 
 const newQuote = (newQuote) => {
   return {
     type: NEWQUOTE,
-    quote: [...newQuote],
+    quote: newQuote.quote,
+    author: newQuote.author,
   };
+};
+
+const defaultState = {
+  fetching: false,
+  quotes: [],
+};
+
+export const asyncDataReducer = (state = defaultState, action) => {
+  switch (action.type) {
+    case REQUESTING_DATA:
+      return {
+        fetching: true,
+        quotesJson: [],
+      };
+    case RECEIVED_DATA:
+      return {
+        fetching: false,
+        quotesJson: action.quotes,
+      };
+    default:
+      return state;
+  }
 };
 
 class MainBox extends React.Component {
@@ -19,12 +45,16 @@ class MainBox extends React.Component {
   }
 
   getQuote() {
-    if (quotesJSON === undefined) {
+    if (
+      this.props.quotesJSON[0] === undefined ||
+      this.props.quotesJSON.isEmpty
+    ) {
       return;
     }
-    let randomIndex = Math.floor(Math.random() * quotesJSON["quotes"].length);
-    let quote = quotesJSON["quotes"][randomIndex]["quote"];
-    let author = quotesJSON["quotes"][randomIndex]["author"];
+
+    let randomIndex = Math.floor(Math.random() * this.props.quotesJSON.length);
+    let quote = this.props.quotesJSON[randomIndex]["quote"];
+    let author = this.props.quotesJSON[randomIndex]["author"];
     this.props.getNewQuote({ quote, author });
   }
 
@@ -59,13 +89,13 @@ class MainBox extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { fullQuote: state.quotes[0] };
+  return { quotesJSON: state.request.quotesJson, fullQuote: state.quotes };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getNewQuote: (...quote) => {
-      dispatch(newQuote(quote));
+    getNewQuote: (quote) => {
+      dispatch(newQuote({ quote: quote.quote, author: quote.author }));
     },
   };
 };

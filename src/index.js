@@ -3,27 +3,56 @@ import { createRoot } from "react-dom/client";
 
 import { Provider } from "react-redux";
 import { createStore, combineReducers, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunkMiddleware from "redux-thunk";
 
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+import { asyncDataReducer, RECEIVED_DATA, REQUESTING_DATA } from "./MainBox";
+
 // noinspection SpellCheckingInspection
 export const NEWQUOTE = "NEWQUOTE";
 
-const quoteReducer = (state = [], action) => {
+export const quoteReducer = (state = {}, action) => {
   switch (action.type) {
     case NEWQUOTE:
-      return [...action.quote];
+      return {
+        quote: action.quote,
+        author: action.author,
+      };
     default:
       return state;
   }
 };
 
-const rootReducer = combineReducers({ quotes: quoteReducer });
-export const store = createStore(rootReducer, applyMiddleware(thunk));
+async function getQuotesFromApi(dispatch) {
+  dispatch({ type: REQUESTING_DATA });
+
+  try {
+    const response = await fetch(
+      "https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json"
+    );
+    let responseJson = await response.json();
+    dispatch({ type: RECEIVED_DATA, quotes: responseJson.quotes });
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: RECEIVED_DATA, quotes: "" });
+  }
+}
+
+const rootReducer = combineReducers({
+  quotes: quoteReducer,
+  request: asyncDataReducer,
+});
+
+const composedEnhancer = composeWithDevTools(applyMiddleware(thunkMiddleware));
+export const store = createStore(rootReducer, composedEnhancer);
+
 const container = document.getElementById("root");
 const root = createRoot(container);
+
+store.dispatch(getQuotesFromApi);
 
 root.render(
   <React.StrictMode>
