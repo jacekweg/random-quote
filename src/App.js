@@ -1,4 +1,4 @@
-import "./App.scss";
+import "./style.scss";
 import Container from "./MainBox";
 import store from "./store";
 

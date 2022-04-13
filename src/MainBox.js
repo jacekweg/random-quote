@@ -1,4 +1,4 @@
-import "./App.scss";
+import "./style.scss";
 import React from "react";
 import { connect } from "react-redux";
 import { NEWQUOTE } from "./reducers/quotes";
@@ -16,6 +16,7 @@ const newQuote = (newQuote) => {
 class MainBox extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { fade: false };
     this.getQuote = this.getQuote.bind(this);
   }
 
@@ -30,6 +31,8 @@ class MainBox extends React.Component {
     let randomIndex = Math.floor(Math.random() * this.props.quotesJSON.length);
     let text = this.props.quotesJSON[randomIndex]["quote"];
     let author = this.props.quotesJSON[randomIndex]["author"];
+
+    this.setState({ fade: true });
 
     this.props.getNewQuote({ text, author });
   }
@@ -50,14 +53,31 @@ class MainBox extends React.Component {
       text = "Quote not found";
       author = "Error";
     }
-    let link = `https://twitter.com/intent/tweet?hashtags=RandomQuote&text="${text}"+-+${author}`;
+    const link = `https://twitter.com/intent/tweet?hashtags=RandomQuote&text="${text}"+-+${author}`;
+    const fade = this.state.fade;
     return (
       <div id="quote-box">
-        <p id="text">{text ? text : <br />}</p>
-        <p id="author"> {author ? "- " + author : <br />}</p>
-
+        <p
+          id="text"
+          className={fade ? "quote" : ""}
+          onAnimationEnd={() => this.setState({ fade: false })}
+        >
+          “{text ? text : " " /*<br />*/}”
+        </p>
+        <p
+          id="author"
+          className={fade ? "quote" : ""}
+          onAnimationEnd={() => this.setState({ fade: false })}
+        >
+          {" "}
+          {author ? "- " + author : <br />}
+        </p>
         <div id="options">
-          <button id="new-quote" onClick={this.getQuote}>
+          <button
+            id="new-quote"
+            onClick={this.getQuote}
+            disabled={this.state.fade}
+          >
             New quote!
           </button>
           <a id="tweet-quote" href={link} rel="noreferrer" target="_blank">

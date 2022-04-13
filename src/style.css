@@ -1,49 +1,60 @@
-$black: #101710;
-$twitterBlue: #1DA1F2;
-
 #main-window {
   display: grid;
   place-items: center;
 }
+
 #quote-box {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
   min-width: 25vw;
   min-height: 10vh;
   text-align: center;
   font-size: 15px;
-  border: $black solid 3px;
+  border: #101710 solid 3px;
+  transition: max-width 2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-#new-quote{
+#new-quote {
   margin-right: 1vw;
 }
 
-#tweet-quote{
-  color: $twitterBlue;
+#tweet-quote {
+  color: #1da1f2;
   align-self: center;
   margin-right: 1vw;
+  font-size: 1.5rem;
 }
 
-#options{
+#options {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   width: 100%;
 }
 
-#new-quote{
-  background-color: #FFFFFF;
+#text {
+  margin: 1vh 0.5vw 0 0.5vw;
+  font-family: Cambria, Georgia, serif;
+  font-size: 1.2rem;
+}
+
+#author {
+  font-family: Cambria, Georgia, serif;
+  font-weight: bold;
+  margin-left: 60%;
+}
+
+#new-quote {
+  background-color: #ffffff;
   border: 1px solid #222222;
   border-radius: 8px;
   box-sizing: border-box;
   color: #222222;
   cursor: pointer;
   display: inline-block;
-  font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
+  font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 5px;
@@ -54,7 +65,7 @@ $twitterBlue: #1DA1F2;
   text-align: center;
   text-decoration: none;
   touch-action: manipulation;
-  transition: box-shadow .2s,-ms-transform .1s,-webkit-transform .1s,transform .1s;
+  transition: box-shadow 0.2s, -ms-transform 0.1s, -webkit-transform 0.1s, transform 0.1s;
   user-select: none;
   -webkit-user-select: none;
   width: auto;
@@ -62,18 +73,33 @@ $twitterBlue: #1DA1F2;
 
 #new-quote:focus-visible {
   box-shadow: #222222 0 0 0 2px, rgba(255, 255, 255, 0.8) 0 0 0 4px;
-  transition: box-shadow .2s;
+  transition: box-shadow 0.2s;
 }
 
-.new-quote:active {
-  background-color: #F7F7F7;
+#new-quote:active {
+  background-color: #f7f7f7;
   border-color: #000000;
-  transform: scale(.96);
+  transform: scale(0.96);
 }
 
-.new-quote:disabled {
-  border-color: #DDDDDD;
-  color: #DDDDDD;
+#new-quote:disabled {
+  border-color: #dddddd;
+  color: #dddddd;
   cursor: not-allowed;
   opacity: 1;
 }
+
+.quote {
+  animation: fadein 0.8s;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */
