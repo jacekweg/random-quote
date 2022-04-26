@@ -70,18 +70,15 @@
   -webkit-user-select: none;
   width: auto;
 }
-
 #new-quote:focus-visible {
   box-shadow: #222222 0 0 0 2px, rgba(255, 255, 255, 0.8) 0 0 0 4px;
   transition: box-shadow 0.2s;
 }
-
 #new-quote:active {
   background-color: #f7f7f7;
   border-color: #000000;
   transform: scale(0.96);
 }
-
 #new-quote:disabled {
   border-color: #dddddd;
   color: #dddddd;
